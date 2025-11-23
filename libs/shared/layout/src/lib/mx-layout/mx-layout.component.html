@@ -1,0 +1,10 @@
+<h1>Hi</h1>
+<div class="layout-container">
+  <mx-sidebar class="sidebar"></mx-sidebar>
+  <div class="main-content-wrapper">
+    <mx-topbar class="topbar" (menuToggle)="onMenuToggle()"></mx-topbar>
+    <main class="content-area">
+      <ng-content></ng-content>
+    </main>
+  </div>
+</div>

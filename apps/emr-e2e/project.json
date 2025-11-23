@@ -1,0 +1,9 @@
+{
+  "name": "emr-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/emr-e2e/src",
+  "implicitDependencies": ["emr"],
+  "// targets": "to see all targets run: nx show project emr-e2e --web",
+  "targets": {}
+}

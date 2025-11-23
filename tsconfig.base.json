@@ -14,7 +14,27 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@shared/shared-ui": ["libs/shared/ui/src/index.ts"],
+      "@shared/util": ["libs/shared/util/src/index.ts"],
+      "@emr/emr-feature-shell": [
+        "libs/emr/feature-shell/src/index.ts"
+      ],
+      "@emr/emr-data-access": [
+        "libs/emr/data-access/src/index.ts"
+      ],
+      "@emr/emr-ui": ["libs/emr/ui/src/index.ts"],
+      "@accounting/accounting-feature-shell": [
+        "libs/accounting/feature-shell/src/index.ts"
+      ],
+      "@accounting/accounting-data-access": [
+        "libs/accounting/data-access/src/index.ts"
+      ],
+      "@accounting/accounting-ui": [
+        "libs/accounting/ui/src/index.ts"
+      ],
+      "@shared/layout": ["libs/shared/layout/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

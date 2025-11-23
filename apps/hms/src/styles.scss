@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* 1. Import the Syncfusion Tailwind theme */
+@import 'node_modules/@syncfusion/ej2/tailwind.css';
+
+/* 2. Add Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
