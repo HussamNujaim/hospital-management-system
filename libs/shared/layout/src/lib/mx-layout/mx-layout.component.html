@@ -1,10 +1,39 @@
-<h1>Hi</h1>
-<div class="layout-container">
-  <mx-sidebar class="sidebar"></mx-sidebar>
-  <div class="main-content-wrapper">
-    <mx-topbar class="topbar" (menuToggle)="onMenuToggle()"></mx-topbar>
-    <main class="content-area">
+<div class="app-root">
+  <!-- Mobile Backdrop Overlay -->
+  <div class="sidebar-backdrop"
+       *ngIf="isSidebarOpen && isMobile"
+       (click)="onMenuToggle()"></div>
+
+  <!-- Sidebar (Left Side) -->
+  <mx-sidebar
+    class="sidebar-column"
+    [class.sidebar-hidden]="!isSidebarOpen && isMobile"
+    [class.sidebar-mini]="isSidebarCollapsed && !isMobile"
+    [items]="navItems"
+    [isOpen]="isSidebarOpen"
+    [isCollapsed]="isSidebarCollapsed"
+    (itemClick)="onSidebarItemClick($event)"
+  ></mx-sidebar>
+
+  <!-- Content Wrapper (Right Side) -->
+  <div class="content-wrapper">
+    <!-- Header -->
+    <mx-topbar
+      [title]="title"
+      [userInfo]="userInfo"
+      [isSidebarOpen]="isSidebarOpen"
+      (menuToggle)="onMenuToggle()"
+    >
+      <!-- Optional: Add custom actions via content projection -->
+      <div topbar-actions>
+        <!-- Future: Notifications, user dropdown, etc. -->
+      </div>
+    </mx-topbar>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
       <ng-content></ng-content>
     </main>
   </div>
 </div>
+

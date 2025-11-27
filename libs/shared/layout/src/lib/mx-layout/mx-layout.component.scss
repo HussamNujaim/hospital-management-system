@@ -1,35 +1,79 @@
-
-:host {
-  display: block;
+/* Layout Root - Flexbox Desktop Admin Layout */
+.app-root {
+  display: flex;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
-.layout-container {
-  display: flex;
-  height: 100%;
+/* Sidebar Column */
+.sidebar-column {
+  width: 250px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  transition: width 0.3s ease, margin-left 0.3s ease;
+  z-index: 100;
 }
 
-.sidebar {
-  flex: 0 0 250px; /* Width: 250px, don't grow, don't shrink */
-  background-color: #f4f4f4; /* Example color */
+/* Mini Sidebar Mode (Icons Only - 60px) */
+.sidebar-column.sidebar-mini {
+  width: 60px;
 }
 
-.main-content-wrapper {
+/* Hidden Sidebar (Mobile) */
+.sidebar-column.sidebar-hidden {
+  width: 0;
+  margin-left: -250px;
+}
+
+/* Content Wrapper (Header + Main Content) */
+.content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.topbar {
-  flex: 0 0 64px; /* Height: 64px */
-  background-color: #fff; /* Example color */
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.content-area {
+/* Main Content Area */
+.main-content {
   flex: 1;
-  padding: 24px;
-  background-color: #fafafa; /* Example color */
+  padding: 1.5rem;
+  background-color: #e4e5e6;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
+
+/* Mobile Backdrop Overlay */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  cursor: pointer;
+}
+
+/* Responsive adjustments for mobile/tablet */
+@media (max-width: 992px) {
+  .sidebar-column {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar-column.sidebar-hidden {
+    transform: translateX(-100%);
+  }
+
+  /* On mobile, always show mini mode when visible */
+  .sidebar-column:not(.sidebar-hidden) {
+    width: 60px;
+  }
+}
+

@@ -1,45 +1,23 @@
-
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SidebarModule, SidebarComponent } from '@syncfusion/ej2-angular-navigations';
-import { TreeViewModule } from '@syncfusion/ej2-angular-navigations';
+import { RouterModule } from '@angular/router';
+import { NavItem } from '../../models/nav-item.interface';
 
 @Component({
   selector: 'mx-sidebar',
   standalone: true,
-  imports: [CommonModule, SidebarModule, TreeViewModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './mx-sidebar.component.html',
-  styleUrl: './mx-sidebar.component.scss',
+  styleUrls: ['./mx-sidebar.component.scss'],
 })
 export class MxSidebarComponent {
-  @ViewChild('sidebar') sidebarInstance!: SidebarComponent;
+  @Input() items: NavItem[] = [];
+  @Input() isOpen = true;
+  @Input() isCollapsed = false; // Mini/Dock mode (icons only)
+  @Output() itemClick = new EventEmitter<NavItem>();
 
-  // Sample data for the TreeView
-  public navItems: object[] = [
-    {
-      nodeId: '01',
-      nodeText: 'Dashboard',
-      iconCss: 'e-icons e-dashboard',
-    },
-    {
-      nodeId: '02',
-      nodeText: 'Appointments',
-      iconCss: 'e-icons e-schedule',
-    },
-    {
-      nodeId: '03',
-      nodeText: 'Patients',
-      iconCss: 'e-icons e-user',
-    },
-    {
-      nodeId: '04',
-      nodeText: 'Settings',
-      iconCss: 'e-icons e-settings',
-    },
-  ];
-  public field: object = { dataSource: this.navItems, id: 'nodeId', text: 'nodeText', iconCss: 'iconCss' };
 
-  public toggle(): void {
-    this.sidebarInstance.toggle();
+  onItemClick(item: NavItem) {
+    this.itemClick.emit(item);
   }
 }

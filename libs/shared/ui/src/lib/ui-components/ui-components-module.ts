@@ -6,7 +6,7 @@ import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 // Wrapper Component
-import { MxButtonComponent } from '../mx-button/mx-button.component';
+import { MxButtonComponent } from '@shared/shared-ui';
 
 @NgModule({
   imports: [CommonModule, ButtonModule, GridModule, MxButtonComponent],

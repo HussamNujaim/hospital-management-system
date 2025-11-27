@@ -1,9 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* 1. Import the Syncfusion Tailwind theme */
-@import 'node_modules/@syncfusion/ej2/tailwind.css';
+/* 1. Import the Syncfusion Material theme (for future components like grids) */
+@import 'node_modules/@syncfusion/ej2-base/styles/material.css';
+@import 'node_modules/@syncfusion/ej2-buttons/styles/material.css';
 
 /* 2. Add Tailwind CSS directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 3. Global reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 4. Layout component styling */
+mx-layout {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+router-outlet {
+  display: none;
+}
+
+/* 5. Syncfusion icon font (for e-icons) */
+@import 'node_modules/@syncfusion/ej2-icons/styles/material.css';
+
+/* 6. Scrollbar styling for content areas */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f3f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c8ced3;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b0b8be;
+}
