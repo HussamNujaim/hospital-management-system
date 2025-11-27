@@ -40,31 +40,42 @@
                   <span class="nav-label" *ngIf="!isDocked">{{ item.label }}</span>
                 </a>
               </li>
-
               <!-- Nav item with children -->
               <li class="nav-item nav-item-has-children"
-                  *ngIf="item.children && item.children.length > 0 && !isDocked"
-                  [class.expanded]="isExpanded(item.id)">
-                <div class="nav-link nav-parent" (click)="toggleSubmenu(item, $event)">
+                  *ngIf="item.children && item.children.length > 0"
+                  [class.expanded]="isExpanded(item.id) && !isDocked">
+
+                <!-- When docked: show only parent icon (no submenu) -->
+                <a *ngIf="isDocked"
+                   [routerLink]="item.route || item.children[0]?.route"
+                   routerLinkActive="active"
+                   class="nav-link nav-link-docked"
+                   [title]="item.label"
+                >
                   <i *ngIf="item.icon" [class]="item.icon" class="nav-icon"></i>
-                  <span class="nav-label">{{ item.label }}</span>
-                  <i class="nav-chevron e-icons"
-                     [class.e-chevron-down]="!isExpanded(item.id)"
-                     [class.e-chevron-up]="isExpanded(item.id)"></i>
-                </div>
-                <ul class="nav-submenu" [class.submenu-expanded]="isExpanded(item.id)">
-                  <li class="nav-item" *ngFor="let child of item.children">
-                    <a
-                      [routerLink]="child.route"
-                      routerLinkActive="active"
-                      class="nav-link nav-link-child"
-                      (click)="onSidebarItemClick(child)"
-                    >
-                      <i *ngIf="child.icon" [class]="child.icon" class="nav-icon"></i>
-                      <span class="nav-label">{{ child.label }}</span>
-                    </a>
-                  </li>
-                </ul>
+                </a>
+
+                <!-- When expanded: show parent with children -->
+                <ng-container *ngIf="!isDocked">
+                  <div class="nav-link nav-parent" (click)="toggleSubmenu(item, $event)">
+                    <i *ngIf="item.icon" [class]="item.icon" class="nav-icon"></i>
+                    <span class="nav-label">{{ item.label }}</span>
+                    <i class="nav-chevron e-icons"
+                       [class.e-chevron-down]="!isExpanded(item.id)"
+                       [class.e-chevron-up]="isExpanded(item.id)"></i>
+                  </div>
+                  <ul class="nav-submenu" [class.submenu-expanded]="isExpanded(item.id)">
+                    <li class="nav-item" *ngFor="let child of item.children">
+                      <a [routerLink]="child.route"
+                         routerLinkActive="active"
+                         class="nav-link nav-link-child"
+                         (click)="onSidebarItemClick(child)">
+                        <i *ngIf="child.icon" [class]="child.icon" class="nav-icon"></i>
+                        <span class="nav-label">{{ child.label }}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </ng-container>
               </li>
             </ng-container>
           </ul>

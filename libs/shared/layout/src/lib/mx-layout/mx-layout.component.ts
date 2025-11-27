@@ -30,7 +30,7 @@ export class MxLayoutComponent implements OnInit {
 
   // Submenu expansion tracking
   public expandedItems: Set<string> = new Set(); // Track which parent items are expanded
-  public accordionMode = true; // true = only one parent expanded at a time, false = multiple can be expanded
+  public accordionMode = false; // true = only one parent expanded at a time, false = multiple can be expanded
 
   // Getter to check if we're on mobile
   get isMobile(): boolean {
