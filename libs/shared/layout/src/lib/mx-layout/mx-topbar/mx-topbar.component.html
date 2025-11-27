@@ -1,8 +1,7 @@
 <ejs-appbar colorMode="Light" class="topbar-wrapper">
   <div class="topbar-content">
     <button class="menu-toggle-btn"
-            [class.menu-toggle-mobile]="isMobile && isSidebarOpen"
-            (click)="onMenuToggle()" aria-label="Toggle menu">
+            (click)="onMenuToggle($event)" aria-label="Toggle menu">
       <span class="e-icons e-menu"></span>
     </button>
     <span class="topbar-title">{{ title }}</span>

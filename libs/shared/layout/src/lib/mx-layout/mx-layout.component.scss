@@ -1,38 +1,144 @@
 /* Layout Root - Flexbox Desktop Admin Layout */
 .app-root {
-  display: flex;
+  position: relative;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
 
-/* Sidebar Column */
-.sidebar-column {
-  width: 250px;
-  flex-shrink: 0;
+/* Custom Backdrop for Mobile */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Syncfusion Sidebar Customization */
+::ng-deep .e-sidebar {
+  background-color: #2f353a;
+  border-right: 1px solid #e4e5e6;
+}
+
+/* Sidebar Wrapper */
+.sidebar-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #2f353a;
+}
+
+/* Brand/Logo Area */
+.sidebar-brand {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+  flex: 1;
   overflow-y: auto;
-  transition: width 0.3s ease, margin-left 0.3s ease;
-  z-index: 100;
+  overflow-x: hidden;
 }
 
-/* Mini Sidebar Mode (Icons Only - 60px) */
-.sidebar-column.sidebar-mini {
-  width: 60px;
+/* Navigation Styles */
+.sidebar-nav {
+  padding: 0.5rem 0;
 }
 
-/* Hidden Sidebar (Mobile) */
-.sidebar-column.sidebar-hidden {
-  width: 0;
-  margin-left: -250px;
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.nav-link.active {
+  background-color: #20a8d8;
+  color: #fff;
+}
+
+.nav-icon {
+  font-size: 1.125rem;
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+/* Submenu Styles */
+.nav-parent {
+  font-weight: 600;
+}
+
+.nav-submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.nav-link-child {
+  padding-left: 3rem;
+  font-size: 0.875rem;
 }
 
 /* Content Wrapper (Header + Main Content) */
 .content-wrapper {
-  flex: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   overflow: hidden;
 }
 
@@ -45,35 +151,21 @@
   overflow-x: hidden;
 }
 
-/* Mobile Backdrop Overlay */
-.sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  cursor: pointer;
+/* Syncfusion Sidebar Dock Mode Adjustments */
+::ng-deep .e-sidebar.e-dock .sidebar-brand {
+  padding: 0.5rem;
 }
 
-/* Responsive adjustments for mobile/tablet */
-@media (max-width: 992px) {
-  .sidebar-column {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-  }
+::ng-deep .e-sidebar.e-dock .nav-label {
+  display: none;
+}
 
-  .sidebar-column.sidebar-hidden {
-    transform: translateX(-100%);
-  }
+::ng-deep .e-sidebar.e-dock .nav-icon {
+  margin-right: 0;
+}
 
-  /* On mobile, always show mini mode when visible */
-  .sidebar-column:not(.sidebar-hidden) {
-    width: 60px;
-  }
+::ng-deep .e-sidebar.e-dock .nav-link {
+  justify-content: center;
+  padding: 0.75rem;
 }
 
