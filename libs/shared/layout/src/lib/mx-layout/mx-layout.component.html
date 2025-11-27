@@ -26,6 +26,7 @@
         <nav class="sidebar-nav">
           <ul class="nav-list">
             <ng-container *ngFor="let item of navItems">
+              <!-- Nav item without children -->
               <li class="nav-item" *ngIf="!item.children || item.children.length === 0">
                 <a
                   [routerLink]="item.route"
@@ -39,12 +40,19 @@
                   <span class="nav-label" *ngIf="!isDocked">{{ item.label }}</span>
                 </a>
               </li>
-              <li class="nav-item nav-item-has-children" *ngIf="item.children && item.children.length > 0 && !isDocked">
-                <div class="nav-link nav-parent">
+
+              <!-- Nav item with children -->
+              <li class="nav-item nav-item-has-children"
+                  *ngIf="item.children && item.children.length > 0 && !isDocked"
+                  [class.expanded]="isExpanded(item.id)">
+                <div class="nav-link nav-parent" (click)="toggleSubmenu(item, $event)">
                   <i *ngIf="item.icon" [class]="item.icon" class="nav-icon"></i>
                   <span class="nav-label">{{ item.label }}</span>
+                  <i class="nav-chevron e-icons"
+                     [class.e-chevron-down]="!isExpanded(item.id)"
+                     [class.e-chevron-up]="isExpanded(item.id)"></i>
                 </div>
-                <ul class="nav-submenu">
+                <ul class="nav-submenu" [class.submenu-expanded]="isExpanded(item.id)">
                   <li class="nav-item" *ngFor="let child of item.children">
                     <a
                       [routerLink]="child.route"

@@ -28,6 +28,10 @@ export class MxLayoutComponent implements OnInit {
   public mediaQuery = '(min-width: 992px)'; // Breakpoint for desktop vs mobile
   public closeOnDocumentClick = false; // Disabled to prevent conflicts with toggle button
 
+  // Submenu expansion tracking
+  public expandedItems: Set<string> = new Set(); // Track which parent items are expanded
+  public accordionMode = true; // true = only one parent expanded at a time, false = multiple can be expanded
+
   // Getter to check if we're on mobile
   get isMobile(): boolean {
     return typeof window !== 'undefined' && window.innerWidth < 992;
@@ -42,12 +46,7 @@ export class MxLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Default navigation items if none provided
-    if (this.navItems.length === 0) {
-      this.navItems = [
-        { id: 'main', label: 'Main', icon: 'e-icons e-home', route: '/main' },
-      ];
-    }
+    // Navigation items should be provided by the app
   }
 
   onSidebarCreated(): void {
@@ -56,12 +55,29 @@ export class MxLayoutComponent implements OnInit {
       if (this.isMobile) {
         this.sidebar.hide();
         this.isSidebarOpen = false;
+        this.isDocked = false;
       } else {
+        // Desktop: Start in expanded (not docked) mode
         this.sidebar.show();
         this.isSidebarOpen = true;
+        this.isDocked = false;
+
+        // Force remove the e-dock class if Syncfusion added it
+        if (this.sidebar.element && this.sidebar.element.classList.contains('e-dock')) {
+          this.sidebar.element.classList.remove('e-dock');
+        }
       }
-      // Check initial docked state
-      setTimeout(() => this.updateDockedState(), 100);
+
+      // Check docked state after initialization
+      setTimeout(() => {
+        // On desktop, ensure we start NOT docked
+        if (!this.isMobile && this.sidebar.element && this.sidebar.element.classList.contains('e-dock')) {
+          this.sidebar.element.classList.remove('e-dock');
+          this.isDocked = false;
+        } else {
+          this.updateDockedState();
+        }
+      }, 150);
     }
   }
 
@@ -78,11 +94,27 @@ export class MxLayoutComponent implements OnInit {
   }
 
   onMenuToggle(): void {
-    // Toggle sidebar open/close using Syncfusion's toggle method
-    if (this.sidebar) {
+    if (!this.sidebar) return;
+
+    if (this.isMobile) {
+      // Mobile: Toggle sidebar visibility (hide/show)
       this.sidebar.toggle();
-      // Update docked state after toggle (with small delay for DOM update)
       setTimeout(() => this.updateDockedState(), 50);
+    } else {
+      // Desktop: Toggle between expanded and docked mode
+      if (this.isDocked) {
+        // Currently docked (60px) -> Expand to full width (250px)
+        if (this.sidebar.element) {
+          this.sidebar.element.classList.remove('e-dock');
+          this.isDocked = false;
+        }
+      } else {
+        // Currently expanded (250px) -> Dock to mini mode (60px)
+        if (this.sidebar.element) {
+          this.sidebar.element.classList.add('e-dock');
+          this.isDocked = true;
+        }
+      }
     }
   }
 
@@ -100,5 +132,41 @@ export class MxLayoutComponent implements OnInit {
     if (this.isMobile) {
       this.closeSidebar();
     }
+  }
+
+  toggleSubmenu(item: NavItem, event?: Event): void {
+    // Prevent navigation if clicking on parent with children
+    if (event && item.children && item.children.length > 0) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Don't toggle submenus when sidebar is docked
+    if (this.isDocked) {
+      return;
+    }
+
+    const itemId = item.id;
+
+    if (this.accordionMode) {
+      // Accordion mode: close others when opening one
+      if (this.expandedItems.has(itemId)) {
+        this.expandedItems.delete(itemId);
+      } else {
+        this.expandedItems.clear();
+        this.expandedItems.add(itemId);
+      }
+    } else {
+      // Non-accordion mode: toggle independently
+      if (this.expandedItems.has(itemId)) {
+        this.expandedItems.delete(itemId);
+      } else {
+        this.expandedItems.add(itemId);
+      }
+    }
+  }
+
+  isExpanded(itemId: string): boolean {
+    return this.expandedItems.has(itemId);
   }
 }

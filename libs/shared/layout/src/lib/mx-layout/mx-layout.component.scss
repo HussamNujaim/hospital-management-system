@@ -1,9 +1,10 @@
 /* Layout Root - Flexbox Desktop Admin Layout */
 .app-root {
-  position: relative;
+  display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
 }
 
 /* Custom Backdrop for Mobile */
@@ -32,6 +33,51 @@
 ::ng-deep .e-sidebar {
   background-color: #2f353a;
   border-right: 1px solid #e4e5e6;
+  transition: width 0.3s ease;
+
+  // Ensure sidebar stays visible in both modes
+  &.e-open {
+    visibility: visible !important;
+  }
+
+  // Docked mode (mini sidebar - 60px)
+  &.e-dock {
+    width: 60px !important;
+  }
+
+  // Expanded mode (full sidebar - 250px)
+  &:not(.e-dock) {
+    width: 250px !important;
+  }
+
+  // On desktop, don't overlay - be part of the flex layout
+  @media (min-width: 992px) {
+    position: relative !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 10;
+    flex-shrink: 0;
+    height: 100vh !important;
+  }
+
+  // On mobile, overlay content
+  @media (max-width: 991px) {
+    position: fixed !important;
+    z-index: 1000;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100vh;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Override Syncfusion's default positioning classes on desktop
+@media (min-width: 992px) {
+  ::ng-deep .e-sidebar.e-push,
+  ::ng-deep .e-sidebar.e-over {
+    position: relative !important;
+  }
 }
 
 /* Sidebar Wrapper */
@@ -148,32 +194,111 @@
 }
 
 /* Submenu Styles */
+.nav-item-has-children {
+  position: relative;
+}
+
 .nav-parent {
-  font-weight: 600;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .nav-label {
+    flex: 1;
+  }
+}
+
+.nav-chevron {
+  font-size: 0.875rem;
+  margin-left: auto;
+  transition: transform 0.3s ease;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .nav-submenu {
   list-style: none;
   padding: 0;
   margin: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.15);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+  &.submenu-expanded {
+    max-height: 1000px; // Large enough for any submenu
+    opacity: 1;
+  }
+
+  .nav-item {
+    border-left: 2px solid transparent;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-left-color: #20a8d8;
+    }
+  }
 }
 
 .nav-link-child {
-  padding-left: 3rem;
+  padding-left: 3.5rem;
   font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  position: relative;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  &.active {
+    background-color: rgba(32, 168, 216, 0.2);
+    color: #20a8d8;
+    border-left-color: #20a8d8;
+    font-weight: 500;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 2.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: #20a8d8;
+    }
+  }
+
+  .nav-icon {
+    font-size: 0.9375rem;
+    opacity: 0.8;
+  }
+}
+
+/* Expanded state styling */
+.nav-item-has-children.expanded {
+  > .nav-parent {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+  }
 }
 
 /* Content Wrapper (Header + Main Content) */
 .content-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 /* Main Content Area */

@@ -14,22 +14,102 @@ export class AppComponent {
 
   navItems: NavItem[] = [
     {
-      id: 'main',
-      label: 'Home',
+      id: 'dashboard',
+      label: 'Dashboard',
       icon: 'e-icons e-home',
-      route: '/main',
+      route: '/dashboard',
     },
     {
-      id: 'about',
-      label: 'About',
-      icon: 'e-icons e-search',
-      route: '/about',
+      id: 'patients',
+      label: 'Patients',
+      icon: 'e-icons e-user',
+      route: '/patients',
+      children: [
+        {
+          id: 'patient-list',
+          label: 'Patient List',
+          icon: 'e-icons e-list-unordered',
+          route: '/patients/list',
+        },
+        {
+          id: 'patient-registration',
+          label: 'Registration',
+          icon: 'e-icons e-plus',
+          route: '/patients/register',
+        },
+        {
+          id: 'patient-appointments',
+          label: 'Appointments',
+          icon: 'e-icons e-calendar',
+          route: '/patients/appointments',
+        },
+      ],
+    },
+    {
+      id: 'medical',
+      label: 'Medical Records',
+      icon: 'e-icons e-folder',
+      route: '/medical',
+      children: [
+        {
+          id: 'medical-records',
+          label: 'View Records',
+          icon: 'e-icons e-file-new',
+          route: '/medical/records',
+        },
+        {
+          id: 'prescriptions',
+          label: 'Prescriptions',
+          icon: 'e-icons e-edit',
+          route: '/medical/prescriptions',
+        },
+      ],
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
+      icon: 'e-icons e-chart',
+      route: '/reports',
+      children: [
+        {
+          id: 'financial-reports',
+          label: 'Financial',
+          icon: 'e-icons e-money',
+          route: '/reports/financial',
+        },
+        {
+          id: 'patient-reports',
+          label: 'Patient Statistics',
+          icon: 'e-icons e-bar-chart',
+          route: '/reports/patients',
+        },
+        {
+          id: 'staff-reports',
+          label: 'Staff Performance',
+          icon: 'e-icons e-people',
+          route: '/reports/staff',
+        },
+      ],
     },
     {
       id: 'settings',
       label: 'Settings',
       icon: 'e-icons e-settings',
       route: '/settings',
+      children: [
+        {
+          id: 'general-settings',
+          label: 'General',
+          icon: 'e-icons e-tools',
+          route: '/settings/general',
+        },
+        {
+          id: 'user-management',
+          label: 'Users',
+          icon: 'e-icons e-people',
+          route: '/settings/users',
+        },
+      ],
     },
   ];
 
