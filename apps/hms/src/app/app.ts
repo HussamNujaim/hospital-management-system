@@ -22,7 +22,7 @@ export class AppComponent {
     {
       id: 'about',
       label: 'About',
-      icon: 'e-icons e-connect',
+      icon: 'e-icons e-search',
       route: '/about',
     },
     {

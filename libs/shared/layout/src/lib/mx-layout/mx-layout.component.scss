@@ -59,6 +59,40 @@
   color: #fff;
 }
 
+.brand-icon {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #20a8d8;
+}
+
+/* Docked/Mini Sidebar Mode */
+.sidebar-wrapper.sidebar-docked {
+  .sidebar-brand {
+    padding: 0.5rem;
+  }
+
+  .nav-link {
+    justify-content: center;
+    padding: 0.75rem;
+  }
+
+  .nav-icon {
+    margin-right: 0;
+  }
+}
+
+/* Nav Link Docked Mode */
+.nav-link-docked {
+  justify-content: center !important;
+}
+
 /* Sidebar Content */
 .sidebar-content {
   flex: 1;
@@ -151,21 +185,4 @@
   overflow-x: hidden;
 }
 
-/* Syncfusion Sidebar Dock Mode Adjustments */
-::ng-deep .e-sidebar.e-dock .sidebar-brand {
-  padding: 0.5rem;
-}
-
-::ng-deep .e-sidebar.e-dock .nav-label {
-  display: none;
-}
-
-::ng-deep .e-sidebar.e-dock .nav-icon {
-  margin-right: 0;
-}
-
-::ng-deep .e-sidebar.e-dock .nav-link {
-  justify-content: center;
-  padding: 0.75rem;
-}
 

@@ -21,6 +21,7 @@ export class MxLayoutComponent implements OnInit {
 
   // Syncfusion Sidebar Properties
   public isSidebarOpen = true;
+  public isDocked = false; // Track if sidebar is in mini/docked mode
   public sidebarType: 'Push' | 'Over' | 'Slide' | 'Auto' = 'Auto'; // Auto switches between Push (desktop) and Over (mobile)
   public sidebarWidth = '250px';
   public dockSize = '60px'; // Mini sidebar width
@@ -32,13 +33,19 @@ export class MxLayoutComponent implements OnInit {
     return typeof window !== 'undefined' && window.innerWidth < 992;
   }
 
+  // Check if sidebar is in docked/mini mode by inspecting Syncfusion's DOM class
+  private updateDockedState(): void {
+    if (this.sidebar && this.sidebar.element) {
+      // Syncfusion adds 'e-dock' class when in docked mode
+      this.isDocked = this.sidebar.element.classList.contains('e-dock');
+    }
+  }
+
   ngOnInit(): void {
     // Default navigation items if none provided
     if (this.navItems.length === 0) {
       this.navItems = [
         { id: 'main', label: 'Main', icon: 'e-icons e-home', route: '/main' },
-        { id: 'about', label: 'About', icon: 'e-icons e-info', route: '/about' },
-        { id: 'settings', label: 'Settings', icon: 'e-icons e-settings', route: '/settings' },
       ];
     }
   }
@@ -53,23 +60,29 @@ export class MxLayoutComponent implements OnInit {
         this.sidebar.show();
         this.isSidebarOpen = true;
       }
+      // Check initial docked state
+      setTimeout(() => this.updateDockedState(), 100);
     }
   }
 
   onSidebarClose(): void {
     // Sync state when Syncfusion closes the sidebar
     this.isSidebarOpen = false;
+    this.updateDockedState();
   }
 
   onSidebarOpen(): void {
     // Sync state when Syncfusion opens the sidebar
     this.isSidebarOpen = true;
+    this.updateDockedState();
   }
 
   onMenuToggle(): void {
     // Toggle sidebar open/close using Syncfusion's toggle method
     if (this.sidebar) {
       this.sidebar.toggle();
+      // Update docked state after toggle (with small delay for DOM update)
+      setTimeout(() => this.updateDockedState(), 50);
     }
   }
 

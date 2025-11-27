@@ -1,9 +1,4 @@
 <div class="app-root">
-  <!-- Custom Backdrop for Mobile -->
-  <div class="sidebar-backdrop"
-       *ngIf="isSidebarOpen && isMobile"
-       (click)="closeSidebar()"></div>
-
   <!-- Syncfusion Sidebar with built-in responsive behavior -->
   <ejs-sidebar
     #sidebar
@@ -19,10 +14,11 @@
     (open)="onSidebarOpen()"
   >
     <!-- Sidebar Content -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper" [class.sidebar-docked]="isDocked">
       <!-- Brand/Logo Area -->
       <div class="sidebar-brand">
-        <span class="brand-text">HMS</span>
+        <span class="brand-text" *ngIf="!isDocked">HMS</span>
+        <span class="brand-icon" *ngIf="isDocked">H</span>
       </div>
 
       <!-- Navigation Content -->
@@ -35,14 +31,15 @@
                   [routerLink]="item.route"
                   routerLinkActive="active"
                   class="nav-link"
+                  [class.nav-link-docked]="isDocked"
                   (click)="onSidebarItemClick(item)"
-                  [title]="item.label"
+                  [title]="isDocked ? item.label : ''"
                 >
                   <i *ngIf="item.icon" [class]="item.icon" class="nav-icon"></i>
-                  <span class="nav-label">{{ item.label }}</span>
+                  <span class="nav-label" *ngIf="!isDocked">{{ item.label }}</span>
                 </a>
               </li>
-              <li class="nav-item nav-item-has-children" *ngIf="item.children && item.children.length > 0">
+              <li class="nav-item nav-item-has-children" *ngIf="item.children && item.children.length > 0 && !isDocked">
                 <div class="nav-link nav-parent">
                   <i *ngIf="item.icon" [class]="item.icon" class="nav-icon"></i>
                   <span class="nav-label">{{ item.label }}</span>
