@@ -1,30 +1,17 @@
-import { Component } from '@angular/core';
-import { PageTemplateComponent } from './page-template.component';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-patient-registration',
+  selector: 'app-patient-registration-page',
   standalone: true,
-  imports: [PageTemplateComponent],
+  imports: [CommonModule],
   template: `
-    <app-page-template
-      title="Patient Registration"
-      description="Register a new patient in the system">
-      <div class="form-content">
-        <p style="font-size: 1.125rem; color: #73818f; text-align: center; padding: 3rem;">
-          📋 Patient Registration Form<br><br>
-          <span style="font-size: 0.875rem;">This is a mock page. Patient registration form will be implemented here.</span>
-        </p>
-      </div>
-    </app-page-template>
+    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-8">
+      <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-6">Register New Patient</h2>
+      <p class="text-slate-500 dark:text-slate-400">Patient registration form will be displayed here.</p>
+    </div>
   `,
-  styles: [`
-    .form-content {
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  `]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PatientRegistrationPageComponent {}
 

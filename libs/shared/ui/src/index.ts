@@ -1,2 +1,6 @@
 export * from './lib/ui/ui';
-export * from './lib/mx-button/mx-button.component';
+
+// Hospital Management System UI Kit
+export * from './lib/interfaces';
+export * from './lib/components';
+

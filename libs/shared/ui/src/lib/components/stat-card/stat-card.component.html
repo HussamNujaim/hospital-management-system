@@ -1,0 +1,18 @@
+@if (stat(); as statData) {
+  <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all group">
+    <div class="flex items-center justify-between mb-4">
+      <div [class]="'p-3 rounded-2xl transition-transform group-hover:rotate-12 ' + statData.color">
+        <i [class]="statData.icon + ' text-xl'"></i>
+      </div>
+      <span [class]="'text-xs font-bold px-2.5 py-1 rounded-lg ' +
+        (statData.trend > 0
+          ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+          : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400')">
+        {{ statData.trend > 0 ? '↑' : '↓' }} {{ Math.abs(statData.trend) }}%
+      </span>
+    </div>
+    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">{{ statData.label }}</p>
+    <h3 class="text-3xl font-black mt-1 dark:text-white leading-none">{{ statData.value }}</h3>
+  </div>
+}
+

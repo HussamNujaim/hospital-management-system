@@ -1,0 +1,6 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+  @for (stat of stats(); track stat.label) {
+    <hms-stat-card [stat]="stat" />
+  }
+</div>
+

@@ -34,7 +34,26 @@ import {
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, LayoutComponent],
-  templateUrl: "./app.html",
+  template: `
+    <hms-layout
+      [navItems]="navItems()"
+      [isSidebarCollapsed]="isSidebarCollapsed()"
+      [activePageId]="activePage()"
+      [pageTitle]="currentPageTitle()"
+      [subtitle]="'MedCore Command Center'"
+      [searchPlaceholder]="'Quick Search...'"
+      [isDarkMode]="isDarkMode()"
+      [userName]="'Dr. Julian Vance'"
+      [userRole]="'Chief Admin'"
+      [userAvatar]="'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'"
+      (sidebarToggle)="toggleSidebar()"
+      (pageChange)="onPageChange($event)"
+      (themeToggle)="onThemeToggle($event)"
+    >
+      <!-- Router Outlet for actual page content -->
+      <router-outlet></router-outlet>
+    </hms-layout>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
@@ -172,9 +191,7 @@ export class AppComponent implements OnInit {
 
   onPageChange(pageId: string) {
     // Navigate using Angular Router
-    // Split the path into segments for proper routing (e.g., 'patients/list' -> ['patients', 'list'])
-    const pathSegments = pageId.split('/');
-    this.router.navigate(pathSegments);
+    this.router.navigate(['/', pageId]);
   }
 
   onThemeToggle(isDark: boolean) {
@@ -194,9 +211,7 @@ export class AppComponent implements OnInit {
 
   private syncActivePageWithRoute() {
     // Get current URL without leading slash
-    let currentUrl = this.router.url.substring(1) || 'dashboard';
-    // Remove any query params or fragments
-    currentUrl = currentUrl.split('?')[0].split('#')[0];
+    const currentUrl = this.router.url.substring(1) || 'dashboard';
     this.activePage.set(currentUrl);
   }
 

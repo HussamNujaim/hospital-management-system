@@ -1,0 +1,97 @@
+<aside
+  [class]="'relative z-50 h-screen bg-indigo-900 dark:bg-slate-900 text-white transition-all duration-300 ease-in-out border-r border-indigo-800 dark:border-slate-800 flex flex-col ' +
+  (isCollapsed() ? 'w-20' : 'w-64')"
+>
+  <!-- Logo Section -->
+  <div class="h-20 flex items-center px-5 shrink-0 border-b border-indigo-800/50 dark:border-slate-800/50 overflow-hidden">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-white dark:bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      <span [class]="'text-xl font-bold tracking-tight whitespace-nowrap transition-all duration-300 ' + (isCollapsed() ? 'opacity-0 translate-x-[-10px]' : 'opacity-100 translate-x-0')"
+      >MedCore <span class="text-indigo-300">OS</span></span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 py-6 space-y-2 overflow-y-auto overflow-x-visible px-3 custom-scrollbar relative">
+    @for (item of navItems(); track item.id) {
+      <div class="relative group">
+        <!-- Parent Item -->
+        <button
+          (click)="handleMenuClick(item)"
+          [class]="'w-full flex items-center rounded-xl transition-all duration-200 group/btn relative select-none ' +
+          (isCollapsed() ? 'justify-center h-12' : 'gap-4 px-4 py-3 h-12') +
+          (activePageId() === item.id || isParentActive(item) ? 'bg-indigo-600/50 dark:bg-indigo-500/20 text-white shadow-sm ring-1 ring-white/10' : 'text-indigo-200 hover:bg-white/5 hover:text-white')"
+        >
+          <i [class]="item.icon + ' text-lg transition-transform group-hover/btn:scale-110 shrink-0'"></i>
+
+          <span [class]="'font-medium transition-all duration-300 whitespace-nowrap overflow-hidden text-left ' + (isCollapsed() ? 'w-0 opacity-0 invisible' : 'w-full opacity-100 visible')">
+            {{ item.label }}
+          </span>
+
+          <!-- Arrow Indicator (Expanded Mode) -->
+          @if (!isCollapsed() && item.children) {
+            <i [class]="'fas fa-chevron-down text-[10px] transition-transform duration-300 shrink-0 ' + (isMenuOpen(item.id) ? 'rotate-180' : '')"></i>
+          }
+
+          <!-- Active Indicator (Collapsed Mode) -->
+          @if ((activePageId() === item.id || isParentActive(item)) && isCollapsed()) {
+            <div class="absolute left-0 w-1 h-6 bg-indigo-400 rounded-r-full"></div>
+          }
+        </button>
+
+        <!-- Sub-menu (Expanded Mode - Accordion) -->
+        @if (!isCollapsed() && item.children && isMenuOpen(item.id)) {
+          <div class="mt-1 ml-4 pl-4 border-l border-indigo-700/50 space-y-1 animate-in slide-in-from-top-2 duration-200">
+            @for (sub of item.children; track sub.id) {
+              <button
+                (click)="pageChange.emit(sub.id)"
+                [class]="'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ' +
+                (activePageId() === sub.id ? 'text-white bg-white/5' : 'text-indigo-300 hover:text-white hover:bg-white/5')"
+              >
+                <i [class]="sub.icon + ' text-xs opacity-70'"></i>
+                <span class="whitespace-nowrap">{{ sub.label }}</span>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Sub-menu (Collapsed Mode - Flyout Context Menu) -->
+        @if (isCollapsed() && item.children) {
+          <div class="fixed left-[72px] mt-[-48px] w-52 bg-indigo-900 dark:bg-slate-900 border border-indigo-700/50 dark:border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-x-[-10px] group-hover:translate-x-0 transition-all duration-200 z-[9999] py-3 overflow-hidden">
+            <div class="px-5 py-2 border-b border-indigo-800/50 mb-2">
+              <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400">{{ item.label }}</p>
+            </div>
+            <div class="px-2 space-y-1">
+              @for (sub of item.children; track sub.id) {
+                <button
+                  (click)="pageChange.emit(sub.id)"
+                  [class]="'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ' +
+                  (activePageId() === sub.id ? 'text-white bg-indigo-600/50' : 'text-indigo-200 hover:text-white hover:bg-white/10')"
+                >
+                  <i [class]="sub.icon + ' text-xs w-4'"></i>
+                  <span class="font-medium">{{ sub.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="p-4 border-t border-indigo-800/50 dark:border-slate-800/50 shrink-0 h-20 flex items-center overflow-hidden">
+    <div [class]="'flex items-center gap-3 transition-all duration-300 w-full ' + (isCollapsed() ? 'justify-center' : '')">
+      <img [src]="userAvatar()" [alt]="userName()" class="w-10 h-10 rounded-full bg-indigo-700 p-0.5 border border-indigo-500 shrink-0" />
+      <div [class]="'overflow-hidden transition-all duration-300 ' + (isCollapsed() ? 'w-0 opacity-0' : 'w-full opacity-100')">
+        <p class="text-sm font-semibold truncate leading-none mb-1">{{ userName() }}</p>
+        <p class="text-[10px] text-indigo-300 truncate uppercase font-bold tracking-tighter">{{ userRole() }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+

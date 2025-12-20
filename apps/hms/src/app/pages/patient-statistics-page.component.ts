@@ -1,21 +1,17 @@
-import { Component } from '@angular/core';
-import { PageTemplateComponent } from './page-template.component';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-patient-statistics',
+  selector: 'app-patient-statistics-page',
   standalone: true,
-  imports: [PageTemplateComponent],
+  imports: [CommonModule],
   template: `
-    <app-page-template
-      title="Patient Statistics"
-      description="Analyze patient data and trends">
-      <div style="text-align: center; padding: 3rem; color: #73818f;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
-        <h3>Patient Statistics</h3>
-        <p>View patient demographics, visit patterns, and outcome statistics.</p>
-      </div>
-    </app-page-template>
-  `
+    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-8">
+      <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-6">Patient Statistics</h2>
+      <p class="text-slate-500 dark:text-slate-400">Patient statistics and analytics will be displayed here.</p>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PatientStatisticsPageComponent {}
 

@@ -1,7 +1,18 @@
-<mx-layout
-  [navItems]="navItems"
-  [title]="title"
-  [userInfo]="userInfo"
+<hms-layout
+  [navItems]="navItems()"
+  [isSidebarCollapsed]="isSidebarCollapsed()"
+  [activePageId]="activePage()"
+  [pageTitle]="currentPageTitle()"
+  [subtitle]="'MedCore Command Center'"
+  [searchPlaceholder]="'Quick Search...'"
+  [isDarkMode]="isDarkMode()"
+  [userName]="'Dr. Julian Vance'"
+  [userRole]="'Chief Admin'"
+  [userAvatar]="'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'"
+  (sidebarToggle)="toggleSidebar()"
+  (pageChange)="onPageChange($event)"
+  (themeToggle)="onThemeToggle($event)"
 >
+  <!-- Router Outlet for actual page content -->
   <router-outlet></router-outlet>
-</mx-layout>
+</hms-layout>

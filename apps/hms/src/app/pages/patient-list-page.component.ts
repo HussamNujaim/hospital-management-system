@@ -1,90 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageTemplateComponent } from './page-template.component';
 
 @Component({
-  selector: 'app-patient-list',
+  selector: 'app-patient-list-page',
   standalone: true,
-  imports: [CommonModule, PageTemplateComponent],
+  imports: [CommonModule],
   template: `
-    <app-page-template
-      title="Patient List"
-      description="View and manage all registered patients">
-      <div class="mock-table">
-        <div class="table-header">
-          <div>ID</div>
-          <div>Name</div>
-          <div>Age</div>
-          <div>Gender</div>
-          <div>Last Visit</div>
-          <div>Status</div>
+    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 dark:text-white">Patient List</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">View and manage all registered patients</p>
         </div>
-        <div class="table-row" *ngFor="let patient of mockPatients">
-          <div>{{ patient.id }}</div>
-          <div><strong>{{ patient.name }}</strong></div>
-          <div>{{ patient.age }}</div>
-          <div>{{ patient.gender }}</div>
-          <div>{{ patient.lastVisit }}</div>
-          <div><span class="status-badge" [class]="patient.status">{{ patient.status }}</span></div>
-        </div>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 active:scale-95 transition-all">
+          <i class="fas fa-user-plus mr-2"></i>Add Patient
+        </button>
       </div>
-    </app-page-template>
+      <div class="p-20 text-center flex flex-col items-center">
+        <div class="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 border-4 border-white dark:border-slate-700 shadow-xl">
+          <i class="fas fa-users text-4xl text-indigo-500 opacity-50"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white">Patient Database</h3>
+        <p class="text-slate-400 dark:text-slate-500 max-w-sm mx-auto mt-2">
+          The patient management system will be displayed here.
+        </p>
+      </div>
+    </div>
   `,
-  styles: [`
-    .mock-table {
-      width: 100%;
-    }
-
-    .table-header, .table-row {
-      display: grid;
-      grid-template-columns: 80px 1fr 80px 100px 150px 120px;
-      gap: 1rem;
-      padding: 1rem;
-      align-items: center;
-    }
-
-    .table-header {
-      background: #f0f3f5;
-      font-weight: 600;
-      color: #23282c;
-      border-radius: 4px;
-    }
-
-    .table-row {
-      border-bottom: 1px solid #e4e5e6;
-      transition: background 0.2s;
-    }
-
-    .table-row:hover {
-      background: #f8f9fa;
-    }
-
-    .status-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .status-badge.Active {
-      background: #e8f8f0;
-      color: #4dbd74;
-    }
-
-    .status-badge.Follow-up {
-      background: #fff3cd;
-      color: #f86c6b;
-    }
-  `]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PatientListPageComponent {
-  mockPatients = [
-    { id: 'P001', name: 'John Smith', age: 45, gender: 'Male', lastVisit: '2024-11-25', status: 'Active' },
-    { id: 'P002', name: 'Sarah Johnson', age: 32, gender: 'Female', lastVisit: '2024-11-24', status: 'Follow-up' },
-    { id: 'P003', name: 'Michael Brown', age: 58, gender: 'Male', lastVisit: '2024-11-23', status: 'Active' },
-    { id: 'P004', name: 'Emily Davis', age: 27, gender: 'Female', lastVisit: '2024-11-22', status: 'Active' },
-    { id: 'P005', name: 'Robert Wilson', age: 63, gender: 'Male', lastVisit: '2024-11-20', status: 'Follow-up' },
-  ];
-}
+export class PatientListPageComponent {}
 

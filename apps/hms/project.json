@@ -23,10 +23,6 @@
         ],
         "styles": [
           "apps/hms/src/styles.scss",
-          "node_modules/@syncfusion/ej2-base/styles/material.css",
-          "node_modules/@syncfusion/ej2-buttons/styles/material.css",
-          "node_modules/@syncfusion/ej2-navigations/styles/material.css",
-          "node_modules/@syncfusion/ej2-grids/styles/material.css"
         ]
       },
       "configurations": {
