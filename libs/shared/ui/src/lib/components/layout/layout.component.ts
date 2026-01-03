@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, output } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { NavItem } from '../../interfaces';
 
 /**
@@ -12,7 +13,7 @@ import { NavItem } from '../../interfaces';
 @Component({
   selector: 'hms-layout',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ThemeToggleComponent],
+  imports: [CommonModule, SidebarComponent, ThemeToggleComponent, LanguageSelectorComponent],
   templateUrl: './layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

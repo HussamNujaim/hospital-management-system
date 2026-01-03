@@ -15,7 +15,8 @@ import { filter } from 'rxjs/operators';
 import {
   LayoutComponent,
   NavItem,
-  StatCard
+  StatCard,
+  TranslationService
 } from '@shared/shared-ui';
 
 /**
@@ -41,6 +42,9 @@ export class AppComponent implements OnInit {
   // Inject Router
   private router = inject(Router);
 
+  // Inject Translation Service (public for template access)
+  translationService = inject(TranslationService);
+
   // ============================================
   // STATE MANAGEMENT (Data Layer)
   // ============================================
@@ -50,80 +54,87 @@ export class AppComponent implements OnInit {
   isDarkMode = signal(false);
   activePage = signal<string>('dashboard');
 
-  // Navigation Data - Mapped to actual routes
-  navItems = signal<NavItem[]>([
-    { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-chart-pie' },
-    {
-      id: 'patients',
-      label: 'Patients',
-      icon: 'fas fa-users',
-      children: [
-        { id: 'patients/list', label: 'Patient List', icon: 'fas fa-list' },
-        { id: 'patients/register', label: 'Register Patient', icon: 'fas fa-user-plus' },
-        { id: 'patients/appointments', label: 'Appointments', icon: 'fas fa-calendar-check' }
-      ]
-    },
-    {
-      id: 'medical',
-      label: 'Medical Records',
-      icon: 'fas fa-file-medical',
-      children: [
-        { id: 'medical/records', label: 'Records', icon: 'fas fa-folder-open' },
-        { id: 'medical/prescriptions', label: 'Prescriptions', icon: 'fas fa-pills' }
-      ]
-    },
-    {
-      id: 'reports',
-      label: 'Reports',
-      icon: 'fas fa-chart-bar',
-      children: [
-        { id: 'reports/financial', label: 'Financial', icon: 'fas fa-dollar-sign' },
-        { id: 'reports/patients', label: 'Patient Stats', icon: 'fas fa-users' },
-        { id: 'reports/staff', label: 'Staff Reports', icon: 'fas fa-user-md' }
-      ]
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: 'fas fa-cog',
-      children: [
-        { id: 'settings/general', label: 'General', icon: 'fas fa-sliders-h' },
-        { id: 'settings/users', label: 'User Management', icon: 'fas fa-users-cog' }
-      ]
-    },
-  ]);
+  // Navigation Data - Computed to react to language changes
+  navItems = computed<NavItem[]>(() => {
+    const t = this.translationService;
+    return [
+      { id: 'dashboard', label: t.t('dashboard'), icon: 'fas fa-chart-pie' },
+      {
+        id: 'patients',
+        label: t.t('patients'),
+        icon: 'fas fa-users',
+        children: [
+          { id: 'patients/list', label: t.t('patientList'), icon: 'fas fa-list' },
+          { id: 'patients/register', label: t.t('registerPatient'), icon: 'fas fa-user-plus' },
+          { id: 'patients/appointments', label: t.t('appointments'), icon: 'fas fa-calendar-check' },
+          { id: 'patients/book-appointment', label: 'Book Appointment', icon: 'fas fa-calendar-plus' }
+        ]
+      },
+      {
+        id: 'medical',
+        label: t.t('medicalRecords'),
+        icon: 'fas fa-file-medical',
+        children: [
+          { id: 'medical/records', label: t.t('records'), icon: 'fas fa-folder-open' },
+          { id: 'medical/prescriptions', label: t.t('prescriptions'), icon: 'fas fa-pills' }
+        ]
+      },
+      {
+        id: 'reports',
+        label: t.t('reports'),
+        icon: 'fas fa-chart-bar',
+        children: [
+          { id: 'reports/financial', label: t.t('financial'), icon: 'fas fa-dollar-sign' },
+          { id: 'reports/patients', label: t.t('patientStats'), icon: 'fas fa-users' },
+          { id: 'reports/staff', label: t.t('staffReports'), icon: 'fas fa-user-md' }
+        ]
+      },
+      {
+        id: 'settings',
+        label: t.t('settings'),
+        icon: 'fas fa-cog',
+        children: [
+          { id: 'settings/general', label: t.t('general'), icon: 'fas fa-sliders-h' },
+          { id: 'settings/users', label: t.t('userManagement'), icon: 'fas fa-users-cog' }
+        ]
+      },
+    ];
+  });
 
-  // Dashboard Statistics Data
-  stats = signal<StatCard[]>([
-    {
-      label: 'Live Admissions',
-      value: '1,284',
-      trend: 12.5,
-      icon: 'fas fa-procedures',
-      color: 'bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
-    },
-    {
-      label: 'OR Utilization',
-      value: '92%',
-      trend: 4.8,
-      icon: 'fas fa-hospital-user',
-      color: 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-    },
-    {
-      label: 'Staff Efficiency',
-      value: '4.2h',
-      trend: -2.4,
-      icon: 'fas fa-user-nurse',
-      color: 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400'
-    },
-    {
-      label: 'Facility Revenue',
-      value: '$242k',
-      trend: 8.2,
-      icon: 'fas fa-wallet',
-      color: 'bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400'
-    }
-  ]);
+  // Dashboard Statistics Data - Computed to react to language changes
+  stats = computed<StatCard[]>(() => {
+    const t = this.translationService;
+    return [
+      {
+        label: t.t('liveAdmissions'),
+        value: '1,284',
+        trend: 12.5,
+        icon: 'fas fa-procedures',
+        color: 'bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
+      },
+      {
+        label: t.t('orUtilization'),
+        value: '92%',
+        trend: 4.8,
+        icon: 'fas fa-hospital-user',
+        color: 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+      },
+      {
+        label: t.t('staffEfficiency'),
+        value: '4.2h',
+        trend: -2.4,
+        icon: 'fas fa-user-nurse',
+        color: 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400'
+      },
+      {
+        label: t.t('facilityRevenue'),
+        value: '$242k',
+        trend: 8.2,
+        icon: 'fas fa-wallet',
+        color: 'bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400'
+      }
+    ];
+  });
 
   // ============================================
   // COMPUTED PROPERTIES

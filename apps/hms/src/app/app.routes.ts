@@ -3,6 +3,7 @@ import { DashboardPageComponent } from './pages/dashboard-page.component';
 import { PatientListPageComponent } from './pages/patient-list-page.component';
 import { PatientRegistrationPageComponent } from './pages/patient-registration-page.component';
 import { PatientAppointmentsPageComponent } from './pages/patient-appointments-page.component';
+import { AppointmentBookingPageComponent } from './pages/appointment-booking/appointment-booking-page.component';
 import { MedicalRecordsPageComponent } from './pages/medical-records-page.component';
 import { PrescriptionsPageComponent } from './pages/prescriptions-page.component';
 import { FinancialReportsPageComponent } from './pages/financial-reports-page.component';
@@ -19,6 +20,7 @@ export const appRoutes: Route[] = [
   { path: 'patients/list', component: PatientListPageComponent },
   { path: 'patients/register', component: PatientRegistrationPageComponent },
   { path: 'patients/appointments', component: PatientAppointmentsPageComponent },
+  { path: 'patients/book-appointment', component: AppointmentBookingPageComponent },
 
   // Medical Records routes
   { path: 'medical/records', component: MedicalRecordsPageComponent },

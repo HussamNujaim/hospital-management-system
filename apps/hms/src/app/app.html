@@ -3,11 +3,11 @@
   [isSidebarCollapsed]="isSidebarCollapsed()"
   [activePageId]="activePage()"
   [pageTitle]="currentPageTitle()"
-  [subtitle]="'MedCore Command Center'"
-  [searchPlaceholder]="'Quick Search...'"
+  [subtitle]="translationService.t('commandCenter')"
+  [searchPlaceholder]="translationService.t('search')"
   [isDarkMode]="isDarkMode()"
   [userName]="'Dr. Julian Vance'"
-  [userRole]="'Chief Admin'"
+  [userRole]="translationService.t('chiefAdmin')"
   [userAvatar]="'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'"
   (sidebarToggle)="toggleSidebar()"
   (pageChange)="onPageChange($event)"
@@ -16,3 +16,4 @@
   <!-- Router Outlet for actual page content -->
   <router-outlet></router-outlet>
 </hms-layout>
+

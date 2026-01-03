@@ -1,0 +1,511 @@
+<div class="appointment-booking-container h-full flex flex-col bg-slate-50 dark:bg-slate-950">
+  <!-- Header Bar -->
+  <div class="header-bar bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ translationService.t('bookAppointment') }}</h1>
+        <button
+          (click)="goToToday()"
+          class="px-4 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors"
+        >
+          {{ translationService.t('today') }}
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- View Switcher -->
+        <div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+          <button
+            (click)="setView('day')"
+            [class.bg-white]="currentView() === 'day'"
+            [class.dark:bg-slate-700]="currentView() === 'day'"
+            [class.text-indigo-600]="currentView() === 'day'"
+            [class.dark:text-indigo-400]="currentView() === 'day'"
+            class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          >
+            {{ translationService.t('day') }}
+          </button>
+          <button
+            (click)="setView('week')"
+            [class.bg-white]="currentView() === 'week'"
+            [class.dark:bg-slate-700]="currentView() === 'week'"
+            [class.text-indigo-600]="currentView() === 'week'"
+            [class.dark:text-indigo-400]="currentView() === 'week'"
+            class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          >
+            {{ translationService.t('week') }}
+          </button>
+          <button
+            (click)="setView('month')"
+            [class.bg-white]="currentView() === 'month'"
+            [class.dark:bg-slate-700]="currentView() === 'month'"
+            [class.text-indigo-600]="currentView() === 'month'"
+            [class.dark:text-indigo-400]="currentView() === 'month'"
+            class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          >
+            {{ translationService.t('month') }}
+          </button>
+        </div>
+
+        <!-- Date Navigation -->
+        <div class="flex items-center gap-2">
+          <button
+            (click)="previousPeriod()"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <span class="min-w-[200px] text-center font-semibold text-slate-900 dark:text-white">
+            {{ currentMonthName() }}
+          </span>
+
+          <button
+            (click)="nextPeriod()"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Sidebar - Doctor Selection -->
+    <div class="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-y-auto">
+      <div class="p-4">
+        <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">{{ translationService.t('selectDoctor') }}</h2>
+
+        <!-- All Doctors Option -->
+        <button
+          (click)="selectDoctor(null)"
+          [class]="'w-full p-4 mb-2 border-2 rounded-xl hover:border-indigo-300 dark:hover:border-indigo-600 transition-all text-left ' +
+                   (!selectedDoctor() ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500' : 'border-slate-200 dark:border-slate-700')"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900 dark:text-white">{{ translationService.t('allDoctors') }}</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">{{ translationService.t('viewAllAppointments') }}</p>
+            </div>
+          </div>
+        </button>
+
+        <!-- Doctor List -->
+        @for (doctor of doctors(); track doctor.id) {
+          <button
+            (click)="selectDoctor(doctor)"
+            [class.border-2]="selectedDoctor()?.id === doctor.id"
+            [style.border-color]="selectedDoctor()?.id === doctor.id ? doctor.color : ''"
+            [style.background-color]="selectedDoctor()?.id === doctor.id ? doctor.color + '10' : ''"
+            class="w-full p-4 mb-2 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-indigo-300 dark:hover:border-indigo-600 transition-all text-left"
+          >
+            <div class="flex items-center gap-3">
+              <img [src]="doctor.avatar" [alt]="doctor.name" class="w-12 h-12 rounded-full" />
+              <div class="flex-1">
+                <p class="font-semibold text-slate-900 dark:text-white">{{ doctor.name }}</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400">{{ doctor.specialty }}</p>
+              </div>
+              @if (selectedDoctor()?.id === doctor.id) {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" [style.color]="doctor.color" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              }
+            </div>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="flex-1 overflow-hidden">
+      <!-- Week View -->
+      @if (currentView() === 'week') {
+        <div class="h-full flex flex-col">
+          <!-- Week Header -->
+          <div class="grid grid-cols-8 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <div class="p-4 border-r border-slate-200 dark:border-slate-800">
+              <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Time</span>
+            </div>
+            @for (day of currentWeek(); track day.toISOString()) {
+              <div [class]="'p-4 text-center ' + (isToday(day) ? 'bg-indigo-50 dark:bg-indigo-900/20' : '')">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  {{ day.toLocaleDateString('en-US', { weekday: 'short' }) }}
+                </p>
+                <p class="text-2xl font-bold mt-1"
+                   [class.text-indigo-600]="isToday(day)"
+                   [class.dark:text-indigo-400]="isToday(day)"
+                   [class.text-slate-900]="!isToday(day)"
+                   [class.dark:text-white]="!isToday(day)">
+                  {{ day.getDate() }}
+                </p>
+              </div>
+            }
+          </div>
+
+          <!-- Time Slots -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="grid grid-cols-8">
+              <div class="border-r border-slate-200 dark:border-slate-800">
+                @for (time of timeSlots(); track time) {
+                  <div class="h-16 p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+                    <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ time }}</span>
+                  </div>
+                }
+              </div>
+
+              @for (day of currentWeek(); track day.toISOString()) {
+                <div class="border-r border-slate-200 dark:border-slate-800">
+                  @for (time of timeSlots(); track time) {
+                    <div class="h-16 border-b border-slate-200 dark:border-slate-800 relative group">
+                      @if (selectedDoctor()) {
+                        <!-- Check if this slot has an appointment starting here -->
+                        @if (getAppointmentAtSlot(day, time, selectedDoctor()!.id); as appointment) {
+                          <button
+                            (click)="editAppointment(appointment)"
+                            class="absolute inset-0 m-0.5 rounded-lg p-2 text-white text-xs font-medium overflow-hidden cursor-pointer hover:brightness-110 transition-all"
+                            [style.background-color]="getDoctorColor(appointment.doctorId)"
+                            [style.height]="'calc(' + getAppointmentSlotSpan(appointment) + ' * 4rem - 0.25rem)'"
+                            [style.z-index]="10"
+                          >
+                            <p class="font-semibold truncate">{{ appointment.patientName }}</p>
+                            <p class="text-xs opacity-90 truncate">{{ appointment.type }}</p>
+                            <p class="text-xs opacity-75 truncate">{{ appointment.duration }} min</p>
+                          </button>
+                        } @else if (!isDoctorAvailable(selectedDoctor()!.id, day, time, 30)) {
+                          <!-- Unavailable slot (outside working hours, day off, or break) -->
+                          <div
+                            class="absolute inset-0 m-0.5 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center cursor-not-allowed"
+                            [title]="getUnavailabilityReason(selectedDoctor()!.id, day, time)"
+                          >
+                            <span class="text-xs text-slate-400 dark:text-slate-600 font-medium">
+                              {{ getUnavailabilityReason(selectedDoctor()!.id, day, time) }}
+                            </span>
+                          </div>
+                        } @else if (isTimeSlotAvailable(day, time, selectedDoctor()!.id, 30)) {
+                          <!-- Available slot -->
+                          <button
+                            (click)="openBookingModal(day, time)"
+                            class="absolute inset-0 hover:bg-indigo-50 dark:hover:bg-indigo-900/10 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <span class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">+ {{ translationService.t('bookNow') }}</span>
+                          </button>
+                        }
+                      } @else {
+                        <!-- All doctors view -->
+                        @if (getAppointmentAtSlot(day, time); as appointment) {
+                          <button
+                            (click)="editAppointment(appointment)"
+                            class="absolute inset-0 m-0.5 rounded-lg p-2 text-white text-xs font-medium overflow-hidden cursor-pointer hover:brightness-110 transition-all"
+                            [style.background-color]="getDoctorColor(appointment.doctorId)"
+                            [style.height]="'calc(' + getAppointmentSlotSpan(appointment) + ' * 4rem - 0.25rem)'"
+                            [style.z-index]="10"
+                          >
+                            <p class="font-semibold truncate">{{ appointment.patientName }}</p>
+                            <p class="text-xs opacity-90 truncate">{{ appointment.doctorName }}</p>
+                            <p class="text-xs opacity-75 truncate">{{ appointment.type }} ({{ appointment.duration }}min)</p>
+                          </button>
+                        }
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Day View -->
+      @if (currentView() === 'day') {
+        <div class="h-full flex flex-col">
+          <!-- Day Header -->
+          <div class="grid grid-cols-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <div class="p-4 border-r border-slate-200 dark:border-slate-800">
+              <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Time</span>
+            </div>
+            <div class="p-4 text-center bg-indigo-50 dark:bg-indigo-900/20">
+              <p class="text-sm font-medium text-slate-500 dark:text-slate-400">
+                {{ selectedDate().toLocaleDateString('en-US', { weekday: 'long' }) }}
+              </p>
+              <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
+                {{ selectedDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Time Slots for Day -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="grid grid-cols-2">
+              <div class="border-r border-slate-200 dark:border-slate-800">
+                @for (time of timeSlots(); track time) {
+                  <div class="h-20 p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+                    <span class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ time }}</span>
+                  </div>
+                }
+              </div>
+
+              <div>
+                @for (time of timeSlots(); track time) {
+                  <div class="h-20 border-b border-slate-200 dark:border-slate-800 relative group">
+                    @if (selectedDoctor()) {
+                      @if (getAppointmentAtSlot(selectedDate(), time, selectedDoctor()!.id); as appointment) {
+                        <button
+                          (click)="editAppointment(appointment)"
+                          class="absolute inset-0 m-1 rounded-lg p-3 text-white overflow-hidden cursor-pointer hover:brightness-110 transition-all"
+                          [style.background-color]="getDoctorColor(appointment.doctorId)"
+                          [style.height]="'calc(' + getAppointmentSlotSpan(appointment) + ' * 5rem - 0.5rem)'"
+                          [style.z-index]="10"
+                        >
+                          <p class="font-bold">{{ appointment.patientName }}</p>
+                          <p class="text-sm opacity-90 mt-1">{{ appointment.type }}</p>
+                          <p class="text-xs opacity-75 mt-1">{{ translationService.t('duration') }}: {{ appointment.duration }} {{ translationService.t('minutes') }}</p>
+                        </button>
+                      } @else if (!isDoctorAvailable(selectedDoctor()!.id, selectedDate(), time, 30)) {
+                        <!-- Unavailable slot -->
+                        <div
+                          class="absolute inset-0 m-1 bg-slate-100 dark:bg-slate-800 rounded-lg flex flex-col items-center justify-center cursor-not-allowed"
+                          [title]="getUnavailabilityReason(selectedDoctor()!.id, selectedDate(), time)"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-300 dark:text-slate-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                          </svg>
+                          <span class="text-xs text-slate-400 dark:text-slate-600 font-medium text-center">
+                            {{ getUnavailabilityReason(selectedDoctor()!.id, selectedDate(), time) }}
+                          </span>
+                        </div>
+                      } @else if (isTimeSlotAvailable(selectedDate(), time, selectedDoctor()!.id, 30)) {
+                        <button
+                          (click)="openBookingModal(selectedDate(), time)"
+                          class="absolute inset-0 hover:bg-indigo-50 dark:hover:bg-indigo-900/10 transition-colors opacity-0 group-hover:opacity-100 flex items-center justify-center"
+                        >
+                          <span class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">+ {{ translationService.t('bookAppointment') }}</span>
+                        </button>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Month View -->
+      @if (currentView() === 'month') {
+        <div class="h-full flex flex-col p-4">
+          <div class="grid grid-cols-7 gap-2 mb-2">
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Mon</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Tue</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Wed</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Thu</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Fri</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Sat</div>
+            <div class="text-center text-sm font-semibold text-slate-500 dark:text-slate-400 py-2">Sun</div>
+          </div>
+
+          <div class="grid grid-cols-7 gap-2 flex-1">
+            @for (day of currentMonth(); track day.toISOString()) {
+              <button
+                (click)="selectedDate.set(day); setView('day')"
+                [class.bg-indigo-600]="isToday(day) && isSameMonth(day)"
+                [class.dark:bg-indigo-500]="isToday(day) && isSameMonth(day)"
+                [class.text-white]="isToday(day) && isSameMonth(day)"
+                [class.text-slate-400]="!isSameMonth(day)"
+                [class.dark:text-slate-600]="!isSameMonth(day)"
+                [class.hover:bg-slate-100]="!isToday(day)"
+                [class.dark:hover:bg-slate-800]="!isToday(day)"
+                class="aspect-square rounded-lg p-2 text-left relative transition-colors"
+              >
+                <span class="text-sm font-medium">{{ day.getDate() }}</span>
+                @if (getAppointmentsForDay(day, selectedDoctor()?.id).length > 0) {
+                  <div class="absolute bottom-1 left-1 right-1 flex gap-0.5">
+                    @for (apt of getAppointmentsForDay(day, selectedDoctor()?.id).slice(0, 3); track apt.id) {
+                      <div class="h-1 flex-1 rounded-full" [style.background-color]="getDoctorColor(apt.doctorId)"></div>
+                    }
+                  </div>
+                }
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+@if (showBookingModal()) {
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+            {{ editingAppointment() ? translationService.t('edit') + ' ' + translationService.t('appointments') : translationService.t('bookAppointment') }}
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {{ formatDate(selectedTimeSlot()!.date) }} {{ translationService.t('at') }} {{ selectedTimeSlot()!.time }}
+          </p>
+        </div>
+        <button
+          (click)="closeBookingModal()"
+          class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6">
+        <!-- Doctor Info -->
+        @if (selectedDoctor()) {
+          <div class="mb-6 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl flex items-center gap-4">
+            <img [src]="selectedDoctor()!.avatar" [alt]="selectedDoctor()!.name" class="w-16 h-16 rounded-full" />
+            <div>
+              <p class="font-bold text-slate-900 dark:text-white text-lg">{{ selectedDoctor()!.name }}</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">{{ selectedDoctor()!.specialty }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Booking Form -->
+        <form class="space-y-4">
+          <!-- Patient Name -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              {{ translationService.t('patientName') }} *
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="bookingForm().patientName"
+              name="patientName"
+              class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white"
+              [placeholder]="translationService.t('patientName')"
+              required
+            />
+          </div>
+
+          <!-- Phone & Email -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {{ translationService.t('patientPhone') }} *
+              </label>
+              <input
+                type="tel"
+                [(ngModel)]="bookingForm().patientPhone"
+                name="patientPhone"
+                class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white"
+                placeholder="+1 (555) 000-0000"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {{ translationService.t('patientEmail') }}
+              </label>
+              <input
+                type="email"
+                [(ngModel)]="bookingForm().patientEmail"
+                name="patientEmail"
+                class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white"
+                placeholder="patient@email.com"
+              />
+            </div>
+          </div>
+
+          <!-- Appointment Type & Duration -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {{ translationService.t('appointmentType') }}
+              </label>
+              <select
+                [(ngModel)]="bookingForm().appointmentType"
+                name="appointmentType"
+                class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white"
+              >
+                <option value="consultation">{{ translationService.t('consultation') }}</option>
+                <option value="follow-up">{{ translationService.t('followUp') }}</option>
+                <option value="checkup">{{ translationService.t('checkup') }}</option>
+                <option value="procedure">{{ translationService.t('procedure') }}</option>
+                <option value="emergency">{{ translationService.t('emergency') }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {{ translationService.t('duration') }} ({{ translationService.t('minutes') }})
+              </label>
+              <select
+                [(ngModel)]="bookingForm().duration"
+                name="duration"
+                class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white"
+              >
+                <option [value]="30">30 {{ translationService.t('minutes') }}</option>
+                <option [value]="60">60 {{ translationService.t('minutes') }}</option>
+                <option [value]="90">90 {{ translationService.t('minutes') }}</option>
+                <option [value]="120">120 {{ translationService.t('minutes') }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              {{ translationService.t('notes') }} ({{ translationService.t('optional') }})
+            </label>
+            <textarea
+              [(ngModel)]="bookingForm().notes"
+              name="notes"
+              rows="3"
+              class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white resize-none"
+              placeholder="Add any additional notes or special requirements..."
+            ></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-6 border-t border-slate-200 dark:border-slate-800 flex gap-3 justify-between">
+        <div>
+          @if (editingAppointment()) {
+            <button
+              (click)="deleteAppointment(editingAppointment()!.id); closeBookingModal()"
+              class="px-6 py-2.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 rounded-lg transition-colors"
+            >
+              {{ translationService.t('delete') }}
+            </button>
+          }
+        </div>
+        <div class="flex gap-3">
+          <button
+            (click)="closeBookingModal()"
+            class="px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+          >
+            {{ translationService.t('cancel') }}
+          </button>
+          <button
+            (click)="confirmBooking()"
+            class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 rounded-lg transition-colors shadow-lg shadow-indigo-600/20"
+          >
+            {{ editingAppointment() ? translationService.t('save') : translationService.t('confirmBooking') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+

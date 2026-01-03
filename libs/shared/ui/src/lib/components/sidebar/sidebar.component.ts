@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, input, output, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavItem } from '../../interfaces';
+import { TranslationService } from '../../services/translation.service';
 
 /**
  * Sidebar Component
@@ -15,6 +16,12 @@ import { NavItem } from '../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
+  // Inject translation service
+  translationService = inject(TranslationService);
+
+  // Computed property to get translated app title
+  appTitle = computed(() => this.translationService.t('appTitle'));
+  appSubtitle = computed(() => this.translationService.t('appSubtitle'));
   // Inputs
   navItems = input.required<NavItem[]>();
   isCollapsed = input.required<boolean>();
